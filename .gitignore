@@ -1,0 +1,15 @@
+# Sensitive / personal data that should NOT be committed
+# when you fork this template for personal use
+
+# Add your own sensitive files below:
+# .env
+# ops/_contacts.md       # if you want to keep contacts private
+# ops/*/                 # if you want to keep all project data private
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude
+.claude/scheduled_tasks.lock
+debug.log
