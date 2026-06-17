@@ -1,22 +1,19 @@
-# DOCC — Distributed Operations Command Console
+# DOCC — Operations Command Console
 
-A personal AI operating system built on Claude Code. DOCC turns Claude into a persistent, context-aware operations partner — not just a chat assistant.
+A personal AI operating system built on Claude Code. DOCC turns Claude into a persistent, context-aware operations partner — not just a chat assistant. Instead of re-explaining your situation every session, DOCC maintains a living picture of your projects, tasks, contacts, and open loops, and uses it to help you work faster.
 
-## What This Is
+This repository is a **template**. Fork it, run `./setup.sh`, fill in the `[PLACEHOLDERS]`, and you have your own ops console. It was extracted from a system used daily in a real operations role, with all personal and company data stripped out.
 
-DOCC is a structured set of files, rules, and slash commands that give Claude Code a persistent operating context. Instead of re-explaining your situation every session, DOCC maintains a living picture of your projects, tasks, contacts, and open loops — and Claude uses that context to help you work faster.
+## Core design goals
 
-**Core design goals:**
 - Double the operator's productivity by automating administrative overhead
 - Create documentation as a byproduct of work (not a separate activity)
-- Nothing falls through the cracks (loop tracking, source citation, project state)
+- Nothing falls through the cracks — loop tracking, source citation, project state
 - Evolve from real usage, not upfront design
 
-## Core Concepts
+## Core concepts
 
-### Three Buckets of Work
-
-All work falls into one of three categories:
+### Three buckets of work
 
 | Bucket | What It Is | Example |
 |--------|-----------|---------|
@@ -24,199 +21,144 @@ All work falls into one of three categories:
 | **Execute** | Work that requires your hands on it | Data analysis, procurement, configuration, process work |
 | **Think** | Strategy, planning, capability building — highest leverage | Architecture decisions, team structure, process design |
 
-The goal: improve Route and Execute efficiency to free more time for Think.
+The goal: make Route and Execute efficient enough to free more time for Think.
 
-### The Capture Layer
+### The capture layer
 
-Documentation happens as a byproduct of working through DOCC — not as a separate activity. Conversations build `_kb.md`. Project work builds context files. Decisions produce source-cited records automatically.
+Documentation happens as a byproduct of working through DOCC. Conversations build the knowledge base. Project work builds context files. Decisions produce source-cited records automatically.
 
-### Engines, Skills, Agents
+### Engines, skills, agents
 
-**Engines** are persistent systems for different types of work:
-- **Router** — communication, people connection, information sharing
-- **Executor** — repeatable task work, process automation
-- **Coordinator** — multi-person project tracking, deadlines, accountability
-- **Strategist** — long-range planning, decision support
+- **Engines** — persistent systems for each type of work (Router, Executor, Coordinator, Strategist)
+- **Skills** — shared capabilities any engine uses (data analysis, technical writing, research, drafting)
+- **Agents** — engine + skills combined for a specific job (`ops--scheduler`, `str--critic`, …)
 
-**Skills** are shared capabilities any engine can use:
-- Data Analysis, Technical Writing, Research, Drafting
+DOCC is the interface layer — it routes to the right engine based on what you need. See `ops/_architecture.md`.
 
-**Agents** are engine + skills combined for a specific job (e.g., `ops--scheduler`, `ops--tracker`).
-
-**DOCC** is the interface layer — it routes to the right engine based on what you need.
-
-## Quick Start
-
-### 1. Clone and configure
+## Quick start
 
 ```bash
-git clone https://github.com/yourusername/docc.git
+git clone <your-fork-url> docc
 cd docc
+./setup.sh                 # fills in name/role/boss/reports/email across the template
 ```
 
-### 2. Set up your identity in `CLAUDE.md`
-
-Open `CLAUDE.md` and replace the placeholder sections:
-- `[YOUR NAME]` — your name
-- `[YOUR ROLE]` — your role/function
-- `[YOUR BOSS]` — who you report to
-- `[YOUR DIRECT REPORTS]` — who reports to you (or leave blank)
-- Voice guide — update `ops/_voice.md` with your writing style
-
-### 3. Initialize your ops files
+Then finish the manual placeholders setup.sh lists (Google user ID, MCP servers, Notion DB ids if used), and:
 
 ```bash
-cp ops/_goals.yaml.example ops/_goals.yaml
-cp ops/_contacts.md.example ops/_contacts.md
-```
-
-Edit these with your actual goals and key contacts.
-
-### 4. Open in Claude Code
-
-```bash
+cp .mcp.json.example .mcp.json     # add your MCP servers + credentials (gitignored)
 claude .
+/gm                                # your first morning briefing
 ```
 
-Run `/gm` to start your first morning briefing.
+Find anything you missed: `grep -rn '\[' CLAUDE.md ops .claude`
 
-## File Structure
+## File structure
 
 ```
 docc/
-├── CLAUDE.md                    # System instructions (read by Claude every session)
+├── CLAUDE.md                       # System instructions, read by Claude every session
+├── README.md / help.md             # This file + a command cheat-sheet
+├── setup.sh                        # Placeholder-fill + init script
+├── .mcp.json.example               # MCP server config template (copy to .mcp.json)
 ├── .claude/
-│   └── rules/
-│       └── ops.md               # Always-active operational rules
-├── ops/
-│   ├── _index.md                # Master project registry
-│   ├── _tasks.md                # Unified task list
-│   ├── _awaiting.md             # Open loops / waiting on others
-│   ├── _contacts.md             # People catalog
-│   ├── _kb.md                   # Domain knowledge base
-│   ├── _goals.yaml              # Your OKRs / objectives
-│   ├── _voice.md                # Your writing style guide
-│   ├── _google-chat-spaces.md   # Chat space ID mapping (if using Google Chat)
-│   ├── _architecture.md         # System architecture (evolves with usage)
-│   ├── _future-agents.md        # Agent development roadmap
-│   ├── _changelog.md            # System changes log
-│   └── {project-name}/
-│       ├── {project-name}.context.md   # Living project state
-│       └── {date}-{description}.md     # Dated notes (calls, meetings, etc.)
-└── .claude/
-    └── commands/                # Slash command definitions
+│   ├── rules/ops.md                # Always-active operational rules (tracking, citation, archive)
+│   ├── commands/                   # 13 slash commands
+│   ├── agents/                     # 8 subagents (ops--*, str--*)
+│   ├── hooks/session-save.sh       # SessionEnd safety-net logger
+│   └── settings.json               # Plugin/permission config
+├── memory/
+│   ├── MEMORY.md                   # Always-loaded behavioral rules (how to act)
+│   └── feedback_*.md               # Universal starter rules; grow your own
+└── ops/
+    ├── _index.md                   # Master project registry
+    ├── _tasks.md                   # Unified task list (tiered)
+    ├── _awaiting.md                # Open loops / waiting on others
+    ├── _contacts.md                # People catalog
+    ├── _goals.yaml(.example)       # Your OKRs
+    ├── _architecture.md            # System architecture
+    ├── _changelog.md / _future-agents.md / _google-chat-spaces.md
+    ├── _kb/                        # Scoped knowledge base
+    │   ├── _index.md               # Manifest (auto-generated by /kb-lint)
+    │   ├── _inbox.md               # Auto-save landing zone
+    │   ├── _kb-lint.py             # Manifest regenerator + drift detector
+    │   └── {scope}/                # procurement, devices, finance, partners, …
+    ├── _templates/                 # project.context.md, dated-note.md
+    ├── router-engine/_routing.md   # Domain-to-owner routing table
+    ├── _archive/                   # Cold storage (closed loops/tasks + histories)
+    ├── _extractors/                # Deterministic signal extraction (optional)
+    ├── _evals/                     # Eval/test harness placeholder (optional)
+    └── {project-name}/             # One folder per project
+        ├── {project-name}.context.md
+        └── {date}-{description}.md
 ```
 
-## Slash Commands
+## Slash commands
 
 | Command | Purpose |
 |---------|---------|
 | `/gm` | Morning briefing — scan all channels, surface priorities, plan the day |
-| `/triage` | Multi-channel inbox scan — check for new messages needing response |
-| `/sitrep` | Generate upstream or downstream status report |
-| `/followup` | Find stale loops — things you're waiting on with no response |
+| `/sitrep` | Generate an upstream or downstream status report |
+| `/followup` | Multi-channel scan + loop reconciliation (1d / 7d / 14d) |
 | `/council` | Strategy Council — major decisions get multi-perspective analysis |
 | `/meetings` | Process meeting transcripts into decisions and action items |
 | `/route` | Route a question/request to the right person |
-| `/classify` | Classify inbox items: IGNORE / FYI / ACTION:ME / ACTION:ROUTE |
-| `/work` | Execute green-light tasks autonomously |
+| `/work` | Execute green-light tasks autonomously; handle ad-hoc drafts |
 | `/queue` | What's on my plate right now? |
+| `/inventory` | Monitor device/asset inventory against thresholds (optional) |
+| `/archive` | Inbox archive sweep |
+| `/kb-lint` | Regenerate the KB manifest + detect drift |
+| `/weekly` | Weekly review: reconcile loops, trim tasks, triage KB inbox, archive |
 | `/close` | Session flush — persist all context before ending |
 
-## Data Files
+## Session persistence
 
-### `ops/_tasks.md`
-Unified task list across all projects. Tiered by priority (Critical / High / Medium / Deferred). Critical is capped at 8 items. Tasks include owner, due date, project, and source.
-
-### `ops/_awaiting.md`
-Everything you're waiting on from others. Automatically tracked when you ask someone for something. Checked during `/triage` and `/followup` for responses.
-
-### `ops/_kb.md`
-Domain knowledge base — organized by topic headers. Grows as you work. Contains decision patterns, domain knowledge, and operational rules you've shared with Claude. Read before drafting to avoid repeating yourself.
-
-### `ops/{project-name}.context.md`
-Living project state. Every project gets one once it has enough complexity. Contains: current state, key people, key decisions (source-cited), open questions, and a sources table.
-
-## Session Persistence
-
-Three layers ensure context is never lost:
-
-1. **Auto-save** (continuous) — After substantive work, DOCC persists to the relevant files immediately. No prompt needed.
-2. **`/close` command** (comprehensive) — Full session review that catches anything auto-save missed.
-3. **SessionEnd hook** (safety net) — Logs which ops files were modified when the session ends.
+1. **Auto-save** (continuous) — after substantive work, DOCC persists to the relevant files immediately
+2. **`/close`** (comprehensive) — full session review that catches anything auto-save missed
+3. **SessionEnd hook** (safety net) — logs which ops files were modified when the session ends
 
 ## Guardrails
 
-- **Never send emails without explicit approval** — Draft and present. Wait for confirmation.
-- **Never fabricate information** — Unknown = say so. Uncertain = state confidence level.
-- **Never skip source citations** — Every claim traces to an email, chat, meeting, or document.
-- **Confirm before irreversible actions** — Sending messages, modifying shared documents, calendar changes.
+- **Never send communications without explicit approval** — draft, present, wait for "send it"
+- **Recipients shown = recipients sent** — no silent reply-all
+- **Never fabricate** — unknown = say so and name the source you'd need
+- **Never skip source citations** — every claim traces to an email, chat, meeting, or document
 
 ## Integrations
 
-DOCC is built to work with these MCP servers (configure in your MCP settings):
+Configure in `.mcp.json` (copy from `.mcp.json.example`). DOCC works with any subset — it notes what's unavailable and proceeds.
 
-| Integration | MCP Server | Used For |
-|-------------|-----------|---------|
-| Gmail | Google MCP | Email scanning, drafting, sending |
-| Google Chat | Google MCP | Chat scanning, message lookup |
-| Google Calendar | Google MCP | Scheduling, event lookup |
-| Google Drive | Google MCP | Document retrieval |
-| Google Sheets | Google MCP | Data lookups |
-| Notion | Notion MCP | Meeting transcripts, project tracking |
-| Slack | Slack MCP | Channel monitoring (read-only) |
+| Integration | Used For |
+|-------------|---------|
+| Gmail / Calendar / Chat / Drive / Sheets (Google MCP) | Email, scheduling, chat, documents, data |
+| Notion MCP | Meeting signals/transcripts, people, projects |
+| Slack MCP (one per workspace) | Channel monitoring (read-only) |
+| Perplexity / web (optional) | Research synthesis |
 
-You can use DOCC with fewer integrations — Claude will note which sources are unavailable and work with what's there.
+## Optional subsystems
 
-## Agents
+Not required to start — turn them on when friction demands:
+- **`ops/_extractors/`** — bottle a recurring email shape into a deterministic extractor
+- **`ops/_archive/`** — route closed loops/tasks to cold storage to keep session-start reads small
+- **Deep-retrieval store (e.g. gbrain)** — sync the archive to a vector/graph store so closed history stays searchable without loading it every session
+- **`ops/_evals/`** — eval/test harness for command outputs
 
-### Operations Team (`ops--`)
+## Design principles
 
-| Agent | Role |
-|-------|------|
-| `ops--scheduler` | Calendar, deadlines, daily planning |
-| `ops--tracker` | Follow-ups, stale loop detection |
-| `ops--briefer` | Status reports, upstream/downstream updates |
-| `ops--processor` | Meeting transcript processing |
+1. **Iterate, don't over-engineer** — build when real friction demands it
+2. **Documentation is a byproduct** — working through DOCC produces the paper trail
+3. **Engines chain together** — work flows across buckets
+4. **Skills are shared** — capabilities belong to the system, not one engine
+5. **Adapt both ways** — you adapt where the system helps; the system adapts where your judgment is the value-add
+6. **Auto-save, don't prompt** — when Claude knows enough to ask, it knows enough to just do it
 
-### Strategy Council (`str--`)
+## Evolving the system
 
-For major decisions — spawns multiple perspectives:
-
-| Agent | Role |
-|-------|------|
-| `str--strategist` | Long-term implications, system dynamics |
-| `str--critic` | Devil's advocate, risk detection |
-| `str--researcher` | Evidence gathering, best practices |
-| `str--synthesizer` | Integrates perspectives into a recommendation |
-
-## Design Principles
-
-1. **Iterate, don't over-engineer** — Build when real friction demands it, not speculatively
-2. **Documentation is a byproduct** — Working through DOCC produces the paper trail automatically
-3. **Engines chain together** — Work flows across buckets; don't design them as silos
-4. **Skills are shared** — Capabilities belong to the system, not to any one engine
-5. **Adapt both ways** — You adapt where the system makes you more effective; system adapts where your judgment is the value-add
-6. **System handles the how** — You focus on the what and why
-7. **Auto-save, don't prompt** — When Claude knows enough to ask, it knows enough to just do it
-
-## Evolving the System
-
-DOCC grows from real usage. New agents get built when a pattern repeats 3+ times. Commands are added when the workflow demands it.
-
-**Build criteria for a new agent:**
-1. A pattern has repeated 3+ times across sessions
-2. The manual effort is clearly wasteful (admin, not thinking)
-3. The input/output contract is clear from real examples
-4. Building it would free meaningful capacity
-
-**Project promotion** — DOCC auto-proposes creating a project context file when a topic shows up repeatedly across `_tasks.md`, `_awaiting.md`, and conversations. No manual filing needed.
+New agents get built when a pattern repeats 3+ times and the manual effort is clearly admin, not thinking. DOCC auto-proposes a project context file when a topic recurs across `_tasks.md`, `_awaiting.md`, and conversation. See `ops/_future-agents.md`.
 
 ## Contributing
 
-This system is designed to be forked and adapted. The core framework (engines, agents, slash commands, file structure) is generic. Your specific content (contacts, projects, goals, KB) is yours.
-
-If you build something useful on top of DOCC, PRs welcome.
+Designed to be forked and adapted. The core framework (engines, agents, commands, file structure) is generic; your content (contacts, projects, goals, KB) is yours. PRs that improve the generic framework are welcome.
 
 ## License
 

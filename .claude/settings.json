@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Edit",
+      "Write"
+    ]
+  },
+  "enabledPlugins": {
+    "pr-review-toolkit@anthropic": true
+  },
+  "extraKnownMarketplaces": {
+    "anthropic": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/claude-code",
+        "path": "plugins"
+      }
+    }
+  },
+  "hooks": {
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/session-save.sh\""
+          }
+        ]
+      }
+    ]
+  }
+}

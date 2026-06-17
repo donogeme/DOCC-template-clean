@@ -13,3 +13,13 @@ Thumbs.db
 # Claude
 .claude/scheduled_tasks.lock
 debug.log
+
+# Extractors — redacted fixtures and the residue tally never leave disk
+ops/_extractors/**/fixtures/*
+!ops/_extractors/**/fixtures/.gitkeep
+ops/_extractors/_residue-tally.jsonl
+
+# Traces — local-only session/debug artifacts (keep README + .gitkeep only)
+ops/_traces/*
+!ops/_traces/README.md
+!ops/_traces/.gitkeep
