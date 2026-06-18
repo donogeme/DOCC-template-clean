@@ -360,7 +360,22 @@ if DIFF_MODE:
         print(f"\n--diff: {MANIFEST_PATH} would change (NOT written). Re-run without --diff to apply.")
 else:
     MANIFEST_PATH.write_text(manifest, encoding="utf-8", newline="\n")
+    # Append a run entry to the lint log so the history link in the manifest resolves.
+    log_entry = (
+        f"## {RUN_TIMESTAMP}\n"
+        f"- Topic files: {len(parsed)} | Scopes: {len(scope_files)}/{len(ALL_SCOPES)} | Drift: {drift_status}\n\n"
+    )
+    if LINT_LOG_PATH.exists():
+        LINT_LOG_PATH.write_text(
+            log_entry + LINT_LOG_PATH.read_text(encoding="utf-8"), encoding="utf-8", newline="\n"
+        )
+    else:
+        LINT_LOG_PATH.write_text(
+            "# KB Lint Log\n\nRun history (newest first). Auto-appended by /kb-lint.\n\n" + log_entry,
+            encoding="utf-8", newline="\n",
+        )
     print(f"Wrote manifest: {MANIFEST_PATH}")
+    print(f"Appended lint log: {LINT_LOG_PATH}")
 
 print(f"  Size: {len(manifest)} bytes")
 print(f"  Lines: {manifest.count(chr(10)) + 1}")

@@ -36,11 +36,12 @@ Mirror the `/gm` + `/followup` concurrency pattern:
 
 4. **Activity reconciliation across all channels (work done outside DOCC):**
 
-   a0. **Verbatim email archive (recall layer) — background, window-matched.** Ingest any not-yet-captured mail into the gbrain recall layer:
+   a0. **Verbatim email archive (recall layer) — OPTIONAL, background, window-matched.** Skip unless you have set up an email-ingestion helper (this template ships none — the scans below work without it). If you have one:
    ```
-   python tools/ingest_emails.py --after <YYYY/MM/DD = 7 days before today>
+   # Example, if you have one — adjust to your tool:
+   # python tools/ingest_emails.py --after <YYYY/MM/DD = 7 days before today>
    ```
-   Run with `run_in_background` — it only feeds the "Written (new)" count and must not block the scans. The `--after` date matches the 7d review window; dedup by message_id makes a wider window harmless, so widen only for a known gap (post-OOO, missed days). Writes one verbatim file per thread to `raw/emails/`, skipping already-ingested messages. Independent of the summary-row capture in step 4h. Report "Written (new)" in the review. See [[docc-system/gbrain-email-ingestion]].
+   Run with `run_in_background` — it only feeds the "Written (new)" count and must not block the scans. The `--after` date matches the 7d review window; dedup by message_id makes a wider window harmless, so widen only for a known gap (post-OOO, missed days). Such a helper writes one verbatim file per thread to `raw/emails/`, skipping already-ingested messages. Independent of the summary-row capture in step 4h. Report "Written (new)" in the review.
 
    a. **Gmail outbound:** `from:[YOUR EMAIL] newer_than:7d`. New asks, decisions, threads with untracked people, vendor relationships.
 
@@ -125,11 +126,12 @@ Mirror the `/gm` + `/followup` concurrency pattern:
 
 7. **Update files:** Apply task hygiene to `_tasks.md`. Update `_goals.yaml` progress fields. Add `_index.md` processing log entry. Persist Gmail reconciliation. Reactivate eligible Deferred items.
 
-8. **Publish shared team context (Drive).** After the project context files are current (step 7), refresh the read-only team folder so teammates see the latest state:
+8. **Publish shared team context (Drive) — OPTIONAL.** Skip unless you have built a Drive-publisher script (this template ships none). If you have one, after the project context files are current (step 7), refresh the read-only team folder so teammates see the latest state:
    ```
-   node tools/sync-shared-context.cjs
+   # Example, if you have built a publisher:
+   # node tools/sync-shared-context.cjs
    ```
-   Idempotent — updates the existing Google Docs IN PLACE (stable IDs/links the team has bookmarked), creates only what's missing. Applies publish-time redactions and a denylist guard. **If it reports `failed > 0`, a banned token (comp/pay, a personal number, a named account-weakness) survived redaction in a source file — that doc is NOT published; investigate and fix the REDACTIONS map before relying on the folder.** To add/remove shared docs or KB scopes, edit the `PROJECTS` / `MANUAL` / `REFERENCE` arrays in the script; any new sensitive content goes in `REDACTIONS` + `DENYLIST`. Folder "[YOUR ORG UNIT] Team - Project Context (read-only)" (`[DRIVE_SHARED_FOLDER_ID]`), shared read-only with [YOUR DIRECT REPORTS]. Background: `ops/_changelog.md` 2026-06-16.
+   Such a publisher should be idempotent — update the existing Google Docs IN PLACE (stable IDs/links the team has bookmarked), creating only what's missing. Applies publish-time redactions and a denylist guard. **If it reports `failed > 0`, a banned token (comp/pay, a personal number, a named account-weakness) survived redaction in a source file — that doc is NOT published; investigate and fix the REDACTIONS map before relying on the folder.** To add/remove shared docs or KB scopes, edit the `PROJECTS` / `MANUAL` / `REFERENCE` arrays in the script; any new sensitive content goes in `REDACTIONS` + `DENYLIST`. Folder "[YOUR ORG UNIT] Team - Project Context (read-only)" (`[DRIVE_SHARED_FOLDER_ID]`), shared read-only with [YOUR DIRECT REPORTS]. Background: `ops/_changelog.md` 2026-06-16.
 
 9. **If audience specified:** Spawn `ops--briefer` for audience-appropriate update. Present draft for review.
 
