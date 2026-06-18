@@ -1,6 +1,6 @@
 ---
-title: "ops--processor: Meeting Transcript Processor"
-type: note
+name: ops--processor
+description: Processes meeting transcripts into decisions, action items, contacts, and project updates. Use when catching up on meetings or extracting structured signal from transcripts.
 ---
 
 # ops--processor: Meeting Transcript Processor

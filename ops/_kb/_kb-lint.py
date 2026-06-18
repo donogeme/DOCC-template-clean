@@ -28,10 +28,48 @@ from pathlib import Path
 from datetime import datetime, timedelta
 
 try:
-    import yaml
+    import yaml  # preferred: full YAML support if installed (pip install -r requirements.txt)
 except ImportError:
-    print("PyYAML is required: pip install pyyaml")
-    sys.exit(1)
+    # Zero-dependency fallback so /kb-lint (and /weekly, which auto-runs it) works on a
+    # fresh clone with stdlib only. Handles the simple frontmatter this KB uses:
+    # scalars, "key: [a, b]" flow lists, and "key:" + indented "- item" block lists.
+    class _MiniYAMLError(Exception):
+        pass
+
+    class _MiniYAML:
+        YAMLError = _MiniYAMLError
+
+        @staticmethod
+        def safe_load(text):
+            if text is None:
+                return {}
+            data, cur_key = {}, None
+            for raw in str(text).splitlines():
+                if not raw.strip() or raw.lstrip().startswith("#"):
+                    continue
+                indented = len(raw) - len(raw.lstrip())
+                stripped = raw.strip()
+                if stripped.startswith("- ") and cur_key is not None and indented > 0:
+                    if not isinstance(data.get(cur_key), list):
+                        data[cur_key] = []
+                    data[cur_key].append(stripped[2:].strip().strip("\"'"))
+                    continue
+                if ":" in raw and indented == 0:
+                    key, _, val = raw.partition(":")
+                    key, val = key.strip(), val.strip()
+                    if val == "":
+                        data[key], cur_key = None, key
+                    elif val.startswith("[") and val.endswith("]"):
+                        inner = val[1:-1].strip()
+                        data[key] = [v.strip().strip("\"'") for v in inner.split(",")] if inner else []
+                        cur_key = None
+                    else:
+                        data[key], cur_key = val.strip("\"'"), None
+            return data
+
+    yaml = _MiniYAML()
+    print("Note: PyYAML not installed — using built-in fallback parser. "
+          "For full YAML support: pip install -r requirements.txt")
 
 # ---- Configuration ----
 KB_DIR = Path("ops/_kb")

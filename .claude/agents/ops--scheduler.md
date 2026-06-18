@@ -1,6 +1,6 @@
 ---
-title: "ops--scheduler: Calendar & Priorities Agent"
-type: note
+name: ops--scheduler
+description: Manages calendar, deadlines, time-blocking, and daily planning. Use for prioritization, scheduling, deadline tracking, and planning what to work on next.
 ---
 
 # ops--scheduler: Calendar & Priorities Agent

@@ -1,6 +1,6 @@
 ---
-title: "ops--tracker: Follow-ups & Loop Closing Agent"
-type: note
+name: ops--tracker
+description: Detects stale awaiting items, overdue tasks, and open loops, and helps close them. Use to find what is waiting on a response or has gone quiet, and to reconcile loops.
 ---
 
 # ops--tracker: Follow-ups & Loop Closing Agent

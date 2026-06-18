@@ -40,7 +40,8 @@ DOCC is the interface layer — it routes to the right engine based on what you 
 ```bash
 git clone <your-fork-url> docc
 cd docc
-./setup.sh                 # fills in name/role/boss/reports/email across the template
+./setup.sh                          # fills in name/role/boss/reports/email across the template
+pip install -r requirements.txt     # optional — full YAML for /kb-lint (a fallback works without it)
 ```
 
 Then finish the manual placeholders setup.sh lists (Google user ID, MCP servers, Notion DB ids if used), and:

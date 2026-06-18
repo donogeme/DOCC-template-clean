@@ -1,6 +1,6 @@
 ---
-title: "ops--briefer: Reports & Communications Agent"
-type: note
+name: ops--briefer
+description: Drafts status reports, weekly updates, and upstream/downstream communications in the operator's voice. Use when you need a status report, briefing, sitrep, or stakeholder update.
 ---
 
 # ops--briefer: Reports & Communications Agent

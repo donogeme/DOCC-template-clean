@@ -63,11 +63,12 @@ Run the command in this order — it reduces wall-clock without skipping any sou
 
 ## Pass 2: Context Discovery
 
-0. **Verbatim email archive (recall layer) — background, window-matched.** Ingest any not-yet-captured mail into the gbrain recall layer:
+0. **Verbatim email archive (recall layer) — OPTIONAL, background, window-matched.** Skip unless you have set up an email-ingestion helper (this template ships none — the scans below work without it). If you have one, ingest any not-yet-captured mail in the background:
    ```
-   python tools/ingest_emails.py --after <YYYY/MM/DD = the {window} lookback, min 1 day>
+   # Example, if you have one — adjust to your tool:
+   # python tools/ingest_emails.py --after <YYYY/MM/DD = the {window} lookback, min 1 day>
    ```
-   Run it with `run_in_background` — it only feeds the header's "Written (new)" count and must not block the scans. The `--after` date matches the scan window (`1d` run → 1 day back; `7d` → 7 days), not a fixed floor: dedup by message_id makes wider windows harmless but pointless when a recent run already ingested them; widen only when there's a known gap (post-OOO, missed days). It writes one verbatim file per thread (latest message, full quoted chain) to `raw/emails/`, skipping anything already on disk. It is the FULL-TEXT archive — independent of the triage below. Report "Written (new)" in the output. See [[docc-system/gbrain-email-ingestion]].
+   Run it with `run_in_background` — it only feeds the header's "Written (new)" count and must not block the scans. The `--after` date matches the scan window (`1d` run → 1 day back; `7d` → 7 days), not a fixed floor: dedup by message_id makes wider windows harmless but pointless when a recent run already ingested them; widen only when there's a known gap (post-OOO, missed days). Such a helper should write one verbatim file per thread (latest message, full quoted chain) to `raw/emails/`, skipping anything already on disk. It is the FULL-TEXT archive — independent of the triage below. Report "Written (new)" in the output.
 
 All Pass 2 scans use the time window from $ARGUMENTS (default 1d / last 24 hours). `{window}` below = that value. **Steps 3-9 are mutually independent — issue them as one parallel batch (with the Pass 1 state-file reads), then do the matching/triage reasoning once everything is back.**
 
