@@ -1,8 +1,19 @@
 # Sensitive / personal data that should NOT be committed
 # when you fork this template for personal use
 
+# Local credentials & machine-local config (created from the *.example files
+# by setup.sh — these hold API tokens, paths, and permission allowlists).
+# The committed *.example templates stay tracked; the live files never are.
+.mcp.json
+.claude/settings.local.json
+.env
+.env.*
+!.env.example
+
+# Generated session log (machine-local)
+ops/_session-log.md
+
 # Add your own sensitive files below:
-# .env
 # ops/_contacts.md       # if you want to keep contacts private
 # ops/*/                 # if you want to keep all project data private
 

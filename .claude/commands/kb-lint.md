@@ -101,7 +101,7 @@ Default (no flags): regenerate manifest, run drift checks, append findings to `_
    - **Notes:** [anything specific]
    ```
 
-8. **If `--check-references` flag set:** Run `Grep` for `_kb.md` across the entire project (excluding `ops/_kb.md` itself, `ops/_kb-migration.md`, `_session-log.md`, archived files). Report all matches as legacy reference candidates. After cutover (Session 10), this should return zero. During migration, expect references in CLAUDE.md, .claude/rules/ops.md, and command files until they're updated.
+8. **If `--check-references` flag set:** Run `Grep` for any legacy flat-`_kb.md` references across the project (excluding `_session-log.md` and archived files). The scoped KB lives under `ops/_kb/`, so this should return zero; report any matches as cleanup candidates.
 
 9. **If `--triage-inbox` flag set:** Read `ops/_kb/_inbox.md`. For each entry:
    - Identify keywords and people
@@ -173,13 +173,8 @@ Lookup tables:
 /kb-lint complete
 [manifest output]
 
-Legacy `_kb.md` references found: 71
-- CLAUDE.md (3 sections)
-- .claude/rules/ops.md (8 lines)
-- .claude/commands/work.md (4 lines)
-- ... (see migration ledger reference tracker)
-
-Expected during migration. Cutover happens in Session 10.
+Legacy `_kb.md` references found: 0
+(The scoped KB lives under ops/_kb/; any matches here are cleanup candidates.)
 ```
 
 **Inbox triage during /weekly:**

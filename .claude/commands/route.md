@@ -21,7 +21,7 @@ $ARGUMENTS is the topic, question, or pasted forwarded message.
 
 3. **Match against routing table:** Search by keyword, topic, context. Check sensitivity. Check Last Verified (flag if >30 days). Rank multi-matches by relevance.
 
-4. **If no routing match, search KB:** `ops/_kb.md`, `ops/_contacts.md`, relevant `ops/{project}/{project}.context.md`.
+4. **If no routing match, search KB:** consult the scoped KB via its manifest `ops/_kb/_index.md` (then the relevant `ops/_kb/{scope}/{topic}.md` files it points to), `ops/_contacts.md`, and relevant `ops/{project}/{project}.context.md`.
 
 5. **Score confidence:**
    - Exact routing table match: +40

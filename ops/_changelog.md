@@ -16,4 +16,4 @@ Reverse chronological. Log all system changes here — new commands, rule update
 
 **What:** Created base system — CLAUDE.md, ops.md rules, all template ops files.
 **Why:** Initial setup from DOCC template.
-**Files:** CLAUDE.md, .claude/rules/ops.md, ops/_index.md, ops/_tasks.md, ops/_awaiting.md, ops/_contacts.md, ops/_kb.md, ops/_voice.md, ops/_goals.yaml, ops/_architecture.md, ops/_future-agents.md
+**Files:** CLAUDE.md, .claude/rules/ops.md, ops/_index.md, ops/_tasks.md, ops/_awaiting.md, ops/_contacts.md, ops/_kb/ (scoped KB), ops/_kb/people-and-tone/voice.md, ops/_goals.yaml, ops/_architecture.md, ops/_future-agents.md

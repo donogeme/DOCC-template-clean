@@ -13,17 +13,16 @@ Run the morning briefing protocol.
    - Monday: `$LOOKBACK = newer_than:3d`, `$SLACK_AFTER = after:[last Friday's date]`. Note "Weekend catch-up mode" in header.
    - Other weekdays: `$LOOKBACK = newer_than:1d`, `$SLACK_AFTER = after:yesterday`.
 
-0.5. **Verbatim email archive (recall layer).** Before the scans below, ingest any not-yet-captured mail into the gbrain recall layer. Use the same lookback as step 0:
+0.5. **Verbatim email archive (recall layer) — OPTIONAL.** Skip this step unless you have set up an email-ingestion helper (a script that writes verbatim mail to `raw/emails/`) and, optionally, a deep-retrieval store. This template does not ship one — the briefing works fine without it, straight off the MCP scans below. If you DO have such a helper, run it in the background at the very start so it doesn't block the scans, using the same lookback as step 0:
    - Monday: `--after <YYYY/MM/DD = 3 days before today>` (weekend catch-up)
    - Other weekdays: `--after <YYYY/MM/DD = 1 day before today>`
 
    ```
-   python tools/ingest_emails.py --after <YYYY/MM/DD per the rule above>
+   # Example, if you have one — adjust to your tool:
+   # python tools/ingest_emails.py --after <YYYY/MM/DD per the rule above>
    ```
 
-   **Run this in the background** (`run_in_background`) at the very start of the run — it writes to disk and only feeds the header's "Written (new)" count, so it must not block the scans below. Collect its count when assembling the briefing header.
-
-   Writes one verbatim file per thread to `raw/emails/`, skipping anything already ingested (dedup by message_id on disk). Matching step 0's window keeps the archive layer in lockstep with the triage scan; skip-existing makes any overlap cost-free, and `/followup`/`/weekly` use their own wider floors to catch gaps. This is the full-text archive layer — independent of the summary-row triage below. See [[docc-system/gbrain-email-ingestion]].
+   Such a helper should write one verbatim file per thread to `raw/emails/`, skipping anything already ingested (dedup by message_id on disk), and feed only the header's "Written (new)" count. Matching step 0's window keeps the archive layer in lockstep with the triage scan; skip-existing makes any overlap cost-free. This is the full-text archive layer — independent of the summary-row triage below.
 
 **Fetch in parallel (steps 1-3).** The state-file reads, inbound scans, and outbound scans below are mutually independent — none consumes another's output. Issue all of them as a single parallel batch of tool calls, then do the triage/cross-reference reasoning (steps 4+) once everything is back. Do not run them one at a time.
 

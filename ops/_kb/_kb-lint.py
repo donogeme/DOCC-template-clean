@@ -4,7 +4,17 @@ Implements the steps in .claude/commands/kb-lint.md
 
 Usage:
     python ops/_kb/_kb-lint.py
+    python ops/_kb/_kb-lint.py --diff            # read-only: show what WOULD change, write nothing
     python ops/_kb/_kb-lint.py --frozen-timestamp "YYYY-MM-DD HH:MM TZ"
+
+Flags:
+    --diff             Compute the manifest and print a unified diff against the
+                       existing one WITHOUT writing. Use during review.
+    --frozen-timestamp Stamp a fixed timestamp instead of "now" (determinism tests).
+
+Note: --check-references and --triage-inbox from the /kb-lint command contract are
+command-layer behaviors (the agent performs the grep / inbox triage); this script
+handles manifest regeneration, --diff, and --frozen-timestamp.
 
 Regenerates the KB manifest (ops/_kb/_index.md) from the frontmatter of every
 topic file under ops/_kb/{scope}/, and reports drift (orphans, broken related
@@ -40,9 +50,17 @@ STALE_THRESHOLD_DAYS = 90  # PLACEHOLDER: no measurement basis. When real data
 # Removed: 600-line / 30-H3 file split trigger (extrapolated, not measured).
 # These can be reintroduced when real usage data justifies a specific value.
 
+# ---- Argument parsing ----
+ARGS = sys.argv[1:]
+DIFF_MODE = "--diff" in ARGS  # read-only: print a diff, write nothing
+
 # Allow a frozen timestamp for determinism testing; otherwise stamp "now".
-if len(sys.argv) > 2 and sys.argv[1] == "--frozen-timestamp":
-    RUN_TIMESTAMP = sys.argv[2]
+RUN_TIMESTAMP = None
+if "--frozen-timestamp" in ARGS:
+    _i = ARGS.index("--frozen-timestamp")
+    if _i + 1 < len(ARGS):
+        RUN_TIMESTAMP = ARGS[_i + 1]
+if RUN_TIMESTAMP:
     RUN_DATE = RUN_TIMESTAMP.split(" ")[0]
 else:
     _now = datetime.now()
@@ -289,9 +307,23 @@ manifest = f"""# KB Manifest
 For full history, see [`_lint-log.md`](_lint-log.md).
 """
 
-MANIFEST_PATH.write_text(manifest, encoding="utf-8", newline="\n")
+if DIFF_MODE:
+    import difflib
+    existing = MANIFEST_PATH.read_text(encoding="utf-8") if MANIFEST_PATH.exists() else ""
+    if existing == manifest:
+        print(f"--diff: {MANIFEST_PATH} already up to date (no changes; {len(parsed)} topic files).")
+    else:
+        sys.stdout.writelines(difflib.unified_diff(
+            existing.splitlines(keepends=True),
+            manifest.splitlines(keepends=True),
+            fromfile=f"{MANIFEST_PATH} (current)",
+            tofile=f"{MANIFEST_PATH} (regenerated)",
+        ))
+        print(f"\n--diff: {MANIFEST_PATH} would change (NOT written). Re-run without --diff to apply.")
+else:
+    MANIFEST_PATH.write_text(manifest, encoding="utf-8", newline="\n")
+    print(f"Wrote manifest: {MANIFEST_PATH}")
 
-print(f"Wrote manifest: {MANIFEST_PATH}")
 print(f"  Size: {len(manifest)} bytes")
 print(f"  Lines: {manifest.count(chr(10)) + 1}")
 print(f"  Topic files indexed: {len(parsed)}")
