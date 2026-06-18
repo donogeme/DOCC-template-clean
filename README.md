@@ -47,7 +47,7 @@ pip install -r requirements.txt     # optional — full YAML for /kb-lint (a fal
 Then finish the manual placeholders setup.sh lists (Google user ID, MCP servers, Notion DB ids if used), and:
 
 ```bash
-cp .mcp.json.example .mcp.json     # add your MCP servers + credentials (gitignored)
+cp -n .mcp.json.example .mcp.json  # if not already created by setup.sh; then edit it with your servers + creds (gitignored)
 claude .
 /gm                                # your first morning briefing
 ```

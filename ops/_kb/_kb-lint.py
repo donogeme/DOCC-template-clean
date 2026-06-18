@@ -161,6 +161,12 @@ for fp in topic_files:
         continue
     body = m.group(2)
 
+    # Empty or comment-only frontmatter: yaml.safe_load returns None. Report as
+    # missing-frontmatter drift and continue (per the /kb-lint contract).
+    if not isinstance(fm, dict):
+        drift["missing_frontmatter"].append(f"{fp} (empty or non-mapping frontmatter)")
+        continue
+
     required = ["id", "scope", "last_updated", "summary"]
     missing = [r for r in required if r not in fm or fm[r] in (None, "")]
     if missing:

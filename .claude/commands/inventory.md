@@ -21,7 +21,7 @@ $ARGUMENTS: `status` (quick view, no alerts), `order` (draft device-vendor order
    - `List of Sites!B2:AC30` — enrollment by site by grade
    - Default thresholds: GREEN ≥15%, YELLOW ≥8%, RED <8% spare ratio. Network reorder point: 30.
 
-2. **Read DOCC context:** `ops/inventory-monitoring/inventory-monitoring.context.md`, `ops/laptop-procurement/laptop-procurement.context.md`, `ops/_awaiting.md` (pending device-vendor responses).
+2. **Read DOCC context (only files that exist):** any inventory/procurement project context files you've created (e.g. `ops/inventory-monitoring/inventory-monitoring.context.md`, `ops/laptop-procurement/laptop-procurement.context.md`) plus `ops/_awaiting.md` (pending device-vendor responses). This template ships none of these by default — skip any that aren't present and create them as your inventory work grows. `/inventory` is optional and needs a tracking sheet.
 
 3. **Per-site evaluation** (sites with enrollment > 0):
    - Laptop-eligible students = sum of grades 3-12 enrollment
