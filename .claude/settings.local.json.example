@@ -1,0 +1,77 @@
+{
+  "_comment": "Sanitized skeleton of a machine-local Claude Code settings file. Copy to settings.local.json and replace every [PLACEHOLDER] with real values for your machine. NEVER commit real API keys, secrets, or absolute paths. The committed settings.json holds shared project config; settings.local.json holds per-machine permission allowlists and is gitignored.",
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(curl:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm test:*)",
+      "Bash(node:*)",
+      "Bash(python:*)",
+      "Bash(python3:*)",
+      "Bash(git clone:*)",
+      "Bash(git checkout:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git status)",
+      "Bash(git diff:*)",
+      "Bash(git push)",
+      "Bash(grep:*)",
+      "Bash(find:*)",
+      "Bash(cat:*)",
+      "Bash(gh api:*)",
+      "WebFetch",
+      "WebSearch",
+      "mcp__google__gmail_list_messages",
+      "mcp__google__gmail_get_message",
+      "mcp__google__gmail_search_threads",
+      "mcp__google__chat_list_spaces",
+      "mcp__google__chat_search_messages",
+      "mcp__google__chat_list_messages",
+      "mcp__google__drive_list_files",
+      "mcp__google__drive_get_file",
+      "mcp__google__docs_get_document",
+      "mcp__google__sheets_get_values",
+      "mcp__google__calendar_list_events",
+      "mcp__notion__query_database",
+      "mcp__notion__get_page",
+      "mcp__slack-workspace-1__slack_list_channels",
+      "mcp__slack-workspace-1__slack_search_messages",
+      "mcp__slack-workspace-2__slack_list_channels",
+      "mcp__slack-workspace-2__slack_search_messages",
+      "Read([PROJECT_PATH]/**)"
+    ],
+    "deny": [],
+    "ask": [
+      "mcp__google__gmail_send_message",
+      "mcp__google__gmail_create_draft",
+      "mcp__google__calendar_create_event",
+      "mcp__google__calendar_update_event",
+      "mcp__google__drive_create_doc",
+      "mcp__google__drive_create_folder",
+      "mcp__google__drive_move_file",
+      "mcp__google__docs_create_formatted_document",
+      "mcp__google__docs_update_formatted_document",
+      "mcp__google__sheets_append_values",
+      "mcp__google__sheets_create_spreadsheet"
+    ],
+    "additionalDirectories": [
+      "[PROJECT_PATH]",
+      "[PROJECT_PATH]/raw/emails"
+    ]
+  },
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"UserPromptSubmit\",\"additionalContext\":\"Current date/time: '$(date '+%A, %B %d, %Y, %l:%M %p ET')'\"}}'"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,20 +1,24 @@
-# Awaiting — Open Loops
+---
+title: Awaiting Responses
+type: note
+---
 
-**Last Updated:** YYYY-MM-DD
+# Awaiting Responses
 
-Items tracked here when you ask someone for something. DOCC scans for responses during `/triage` and `/followup`.
+**Last Updated:** YYYY-MM-DD — _(describe ONLY the latest run here; move the previous narrative to `ops/_archive/awaiting-archive.md`.)_
+
+Open loops — things you are waiting on from others. A loop is added automatically whenever you ask someone for something (email, chat, in-person). DOCC scans for responses during `/followup` and flags any that can be closed.
 
 ---
 
-## Active
+## Fresh
 
-| Item | Waiting On | Asked | Last Nudge | Channel | Project | Notes |
-|------|-----------|-------|------------|---------|---------|-------|
-| [What you're waiting for] | [Person] | YYYY-MM-DD | — | Email | [Project] | [Context] |
+| Was Waiting On | What | Opened | Project | Last Nudge | Source |
+|----------------|------|--------|---------|------------|--------|
+| [Person] *(action on whom / what's the ball position)* | [What you're waiting for, with enough context to act] | YYYY-MM-DD | [Project X] | YYYY-MM-DD or — | [Email / Chat / Meeting transcript / etc.] |
 
 ---
 
 ## Resolved
 
-| Item | Resolved | Outcome |
-|------|----------|---------|
+_Pointer stub, not a holding pen. When a loop closes: strike its twin row in `_tasks.md` in the same pass (closure propagation), then move the struck row to `ops/_archive/awaiting-archive.md` under a `## Sweep YYYY-MM-DD` section. Do not let struck rows accumulate here._

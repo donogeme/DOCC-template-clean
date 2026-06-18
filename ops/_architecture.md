@@ -31,7 +31,7 @@ No people coordination, no tactical action. Planning, team structure, capability
 ### The Capture Layer (runs across all three)
 Documentation happens as a byproduct of doing the work, not as a separate activity.
 
-- Router conversations build `_kb.md`
+- Router conversations build the scoped KB (`ops/_kb/`)
 - Executor runs build process playbooks
 - Coordinator work builds project history
 - Strategy sessions build decision records

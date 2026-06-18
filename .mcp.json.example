@@ -1,0 +1,38 @@
+{
+  "_comment": "Copy this to .mcp.json and fill in your own server paths and credentials. .mcp.json is gitignored so secrets never get committed. Remove any server you do not use; DOCC degrades gracefully when a source is missing. NEVER commit real API keys.",
+
+  "mcpServers": {
+    "google": {
+      "command": "node",
+      "args": ["[PATH_TO]/google-mcp-server/index.js"],
+      "_note": "Gmail, Calendar, Chat, Drive, Sheets, Docs. Auth via your own OAuth credentials."
+    },
+
+    "notion": {
+      "command": "node",
+      "args": ["[PATH_TO]/notion-mcp-server/index.js"],
+      "env": { "NOTION_TOKEN": "[NOTION_INTEGRATION_TOKEN]" },
+      "_note": "Signals / Transcripts / People / Projects databases. Put DB ids in CLAUDE.md."
+    },
+
+    "slack-workspace-1": {
+      "command": "node",
+      "args": ["[PATH_TO]/slack-mcp-server/index.js"],
+      "env": { "SLACK_TOKEN": "[SLACK_TOKEN_WORKSPACE_1]" },
+      "_note": "Read-only. One server entry per Slack workspace you monitor."
+    },
+
+    "slack-workspace-2": {
+      "command": "node",
+      "args": ["[PATH_TO]/slack-mcp-server/index.js"],
+      "env": { "SLACK_TOKEN": "[SLACK_TOKEN_WORKSPACE_2]" }
+    },
+
+    "perplexity": {
+      "command": "node",
+      "args": ["[PATH_TO]/perplexity-mcp-server/index.js"],
+      "env": { "PERPLEXITY_API_KEY": "[PERPLEXITY_API_KEY]" },
+      "_note": "Optional, for /research-style web synthesis. NEVER commit the real key."
+    }
+  }
+}

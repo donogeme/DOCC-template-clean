@@ -1,0 +1,45 @@
+# Goals / OKRs
+# Replace with your actual objectives and key results
+# Used by DOCC to filter priorities and flag misaligned work
+
+quarter: Q1 YYYY
+team: "[Your Team Name]"
+lead: "[Your Name]"
+reports_to: "[Your Boss]"
+
+objectives:
+  - id: OBJ-1
+    title: "[Objective 1 Title]"
+    status: active  # active | at-risk | deferred
+    key_results:
+      - kr: "[Key Result 1]"
+        target: "[Metric / target]"
+        current: "[Current state]"
+    initiatives:
+      - "[Initiative 1]"
+      - "[Initiative 2]"
+    notes: "[Any context]"
+
+  - id: OBJ-2
+    title: "[Objective 2 Title]"
+    status: active
+    key_results:
+      - kr: "[Key Result 1]"
+        target: "[Metric / target]"
+        current: "[Current state]"
+    initiatives:
+      - "[Initiative 1]"
+    notes: ""
+
+  - id: OBJ-3
+    title: "[Objective 3 Title]"
+    status: deferred  # deferred to next quarter
+    key_results:
+      - kr: "[Key Result 1]"
+        target: "[Metric / target]"
+        current: "[Current state]"
+    deferred_reason: "[Why deferred]"
+
+risks:
+  - "[Risk 1]"
+  - "[Risk 2]"
